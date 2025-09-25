@@ -1,49 +1,63 @@
-name: sqlite-test
+name: sqlite
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ main ]
   pull_request:
-
-permissions:
-  contents: read
+    branches: [ main ]
 
 jobs:
   sqlite:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Install sqlite3
+      - name: Install SQLite
         run: |
           sudo apt-get update
           sudo apt-get install -y sqlite3
 
-      - name: Build DB from schema
+      - name: Build DB from script
         run: |
+          set -e
+          sqlite3 -version
           sqlite3 restaurant.db < restaurant.sql
 
-      - name: Sanity checks
+      - name: Sanity checks (tables, triggers, data)
+        shell: bash
         run: |
           set -euo pipefail
+
           echo "[Tables]"
           sqlite3 restaurant.db ".tables"
 
-          echo "[Trigger present]"
-          TRG=$(sqlite3 restaurant.db "SELECT name FROM sqlite_master WHERE type='trigger' AND name='maj_prix_menu';")
-          if [ "$TRG" != "maj_prix_menu" ]; then
-            echo "Trigger maj_prix_menu not found" >&2
-            exit 1
-          fi
+          echo "[Triggers list]"
+          sqlite3 restaurant.db "SELECT name FROM sqlite_master WHERE type='trigger' ORDER BY name;"
 
-          echo "[Row counts]"
+          echo "[Trigger count == 3 (insert/update/delete)]"
+          TRG_COUNT=$(sqlite3 restaurant.db "SELECT COUNT(*) FROM sqlite_master WHERE type='trigger' AND name LIKE 'maj_prix_menu%';")
+          echo "Found $TRG_COUNT trigger(s) matching maj_prix_menu%"
+          test "$TRG_COUNT" -eq 3
+
+          echo "[Row counts >= 1]"
           test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM RESTAURANT;')" -ge 1
           test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM CLIENT;')" -ge 1
           test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM ARTICLE;')" -ge 1
 
-          echo "[Sample query]"
-          # returns >= 1 row if data loaded
+          echo "[Sample query > 0 rows]"
           test "$(sqlite3 restaurant.db "SELECT COUNT(*) FROM ARTICLE WHERE prix_unitaire > 0;")" -ge 1
+
+          echo "[Functional check: prix_base recalculé]"
+          # Menu 1: 1*12.5 + 2*4 + 1*2 = 22.5
+          PB1=$(sqlite3 restaurant.db "SELECT printf('%.2f', prix_base) FROM MENU WHERE id_menu=1;")
+          echo "MENU #1 prix_base = $PB1"
+          test "$PB1" = "22.50"
+
+          # Menu 2: 2*5.5 + 1*2 = 13.0
+          PB2=$(sqlite3 restaurant.db "SELECT printf('%.2f', prix_base) FROM MENU WHERE id_menu=2;")
+          echo "MENU #2 prix_base = $PB2"
+          test "$PB2" = "13.00"
 
           echo "======---All checks passed---======"
