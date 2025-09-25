@@ -1,0 +1,49 @@
+name: sqlite-test
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  sqlite:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install sqlite3
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y sqlite3
+
+      - name: Build DB from schema
+        run: |
+          sqlite3 restaurant.db < restaurant.sql
+
+      - name: Sanity checks
+        run: |
+          set -euo pipefail
+          echo "[Tables]"
+          sqlite3 restaurant.db ".tables"
+
+          echo "[Trigger present]"
+          TRG=$(sqlite3 restaurant.db "SELECT name FROM sqlite_master WHERE type='trigger' AND name='maj_prix_menu';")
+          if [ "$TRG" != "maj_prix_menu" ]; then
+            echo "Trigger maj_prix_menu not found" >&2
+            exit 1
+          fi
+
+          echo "[Row counts]"
+          test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM RESTAURANT;')" -ge 1
+          test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM CLIENT;')" -ge 1
+          test "$(sqlite3 restaurant.db 'SELECT COUNT(*) FROM ARTICLE;')" -ge 1
+
+          echo "[Sample query]"
+          # returns >= 1 row if data loaded
+          test "$(sqlite3 restaurant.db "SELECT COUNT(*) FROM ARTICLE WHERE prix_unitaire > 0;")" -ge 1
+
+          echo "All checks passed ✅"
