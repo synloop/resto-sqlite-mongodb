@@ -1,6 +1,6 @@
 # Resto – SQLite → MongoDB
 
-![SQLite](https://img.shields.io/badge/DB-SQLite-blue) ![MongoDB](https://img.shields.io/badge/DB-MongoDB-brightgreen) ![Build](https://img.shields.io/github/actions/workflow/status/USER/REPO/sqlite-test.yml?label=CI)
+![SQLite](https://img.shields.io/badge/DB-SQLite-blue) ![MongoDB](https://img.shields.io/badge/DB-MongoDB-brightgreen) ![CI](https://github.com/synloop/resto-sqlite-mongodb/actions/workflows/sqlite-test.yml/badge.svg)
 
 Projet académique de modélisation et d’implémentation d’une base de données pour la prise de commande en restauration.
 
