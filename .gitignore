@@ -11,7 +11,7 @@ Thumbs.db
 *.sqlite
 *.sqlite3
 
-# Node / Python caches (au cas où)
+# Node / Python caches
 node_modules/
 __pycache__/
 *.pyc
