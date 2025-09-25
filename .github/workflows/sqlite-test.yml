@@ -46,4 +46,4 @@ jobs:
           # returns >= 1 row if data loaded
           test "$(sqlite3 restaurant.db "SELECT COUNT(*) FROM ARTICLE WHERE prix_unitaire > 0;")" -ge 1
 
-          echo "All checks passed ✅"
+          echo "======---All checks passed---======"
