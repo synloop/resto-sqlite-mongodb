@@ -1,0 +1,5 @@
+[
+  { "id_restaurant": 1, "nom": "Le Bistrot",    "adresse": "12 rue du Marché",  "ville": "Lyon" },
+  { "id_restaurant": 2, "nom": "Veggie Spot",   "adresse": "8 quai Vert",       "ville": "Lyon" },
+  { "id_restaurant": 3, "nom": "Chez Elena",    "adresse": "5 place Pailleron", "ville": "Grenoble" }
+]

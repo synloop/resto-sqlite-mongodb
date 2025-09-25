@@ -1,0 +1,7 @@
+[
+  { "id_client": 1, "nom": "Dupont", "prenom": "Jean",  "email": "jean.dupont@gmail.com", "tel": "0601010101" },
+  { "id_client": 2, "nom": "Martin", "prenom": "Clara", "email": "clara.martin@yahoo.fr", "tel": "0602020202" },
+  { "id_client": 3, "nom": "Durand", "prenom": "Hugo",  "email": "hugo@outlook.com",      "tel": "0603030303" },
+  { "id_client": 4, "nom": "Nguyen", "prenom": "Linh",  "email": "linh@gmail.com",        "tel": "0604040404" },
+  { "id_client": 5, "nom": "Rossi",  "prenom": "Paolo", "email": "paolo@gmail.com",       "tel": "0605050505" }
+]

@@ -1,0 +1,4 @@
+[
+  { "id_menu": 1, "id_restaurant": 1, "nom": "Menu Midi",       "prix_base": 20.5 },
+  { "id_menu": 2, "id_restaurant": 2, "nom": "Menu Végétarien", "prix_base": 13.0 }
+]

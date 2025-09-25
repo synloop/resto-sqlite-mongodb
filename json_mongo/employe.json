@@ -1,0 +1,6 @@
+[
+  { "id_employe": 1, "id_restaurant": 1, "nom": "Bernard", "prenom": "Alice", "poste": "Serveuse", "date_embauche": "2023-04-01" },
+  { "id_employe": 2, "id_restaurant": 1, "nom": "Fabre",   "prenom": "Luc",   "poste": "Cuisinier","date_embauche": "2022-10-15" },
+  { "id_employe": 3, "id_restaurant": 2, "nom": "Morel",   "prenom": "Inès",  "poste": "Caissière","date_embauche": "2024-01-10" },
+  { "id_employe": 4, "id_restaurant": 3, "nom": "Petit",   "prenom": "Omar",  "poste": "Livreur", "date_embauche": "2023-06-20" }
+]

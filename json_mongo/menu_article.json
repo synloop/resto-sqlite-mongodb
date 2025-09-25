@@ -1,0 +1,7 @@
+[
+  { "id_menu": 1, "id_article": 1, "quantite": 1 },
+  { "id_menu": 1, "id_article": 2, "quantite": 2 },
+  { "id_menu": 1, "id_article": 4, "quantite": 1 },
+  { "id_menu": 2, "id_article": 3, "quantite": 2 },
+  { "id_menu": 2, "id_article": 4, "quantite": 1 }
+]

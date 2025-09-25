@@ -1,0 +1,6 @@
+[
+  { "id_article": 1, "libelle": "Burger",  "prix_unitaire": 12.5 },
+  { "id_article": 2, "libelle": "Frites",  "prix_unitaire": 4.0  },
+  { "id_article": 3, "libelle": "Salade",  "prix_unitaire": 5.5  },
+  { "id_article": 4, "libelle": "Café",    "prix_unitaire": 2.0  }
+]
