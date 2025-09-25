@@ -63,7 +63,8 @@ Ce script :
 **Exemple de requête** :
 
 ```sql
--- articles plus chers que la moyenne\ nSELECT libelle, prix_unitaire
+-- articles plus chers que la moyenne
+SELECT libelle, prix_unitaire
 FROM ARTICLE
 WHERE prix_unitaire > (SELECT AVG(prix_unitaire) FROM ARTICLE);
 ```
