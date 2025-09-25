@@ -69,18 +69,62 @@ CREATE TABLE MENU_ARTICLE (
     FOREIGN KEY (id_article) REFERENCES ARTICLE(id_article)
 );
 
-/* ---------- 3. TRIGGER : PRIX DU MENU ---------------------- */
-CREATE TRIGGER maj_prix_menu
-AFTER INSERT OR UPDATE OR DELETE ON MENU_ARTICLE
+/* ---------- 3. TRIGGERS : PRIX DU MENU --------------------- */
+DROP TRIGGER IF EXISTS maj_prix_menu_insert;
+DROP TRIGGER IF EXISTS maj_prix_menu_update;
+DROP TRIGGER IF EXISTS maj_prix_menu_delete;
+
+/* Recalcule après INSERT */
+CREATE TRIGGER maj_prix_menu_insert
+AFTER INSERT ON MENU_ARTICLE
 BEGIN
     UPDATE MENU
-    SET prix_base = (
+    SET prix_base = COALESCE((
         SELECT SUM(a.prix_unitaire * ma.quantite)
         FROM   MENU_ARTICLE ma
-        JOIN   ARTICLE      a USING(id_article)
+        JOIN   ARTICLE a USING(id_article)
         WHERE  ma.id_menu = NEW.id_menu
-    )
+    ), 0)
     WHERE id_menu = NEW.id_menu;
+END;
+
+/* Recalcule après UPDATE */
+CREATE TRIGGER maj_prix_menu_update
+AFTER UPDATE ON MENU_ARTICLE
+BEGIN
+    -- Nouveau menu potentiellement impacté
+    UPDATE MENU
+    SET prix_base = COALESCE((
+        SELECT SUM(a.prix_unitaire * ma.quantite)
+        FROM   MENU_ARTICLE ma
+        JOIN   ARTICLE a USING(id_article)
+        WHERE  ma.id_menu = NEW.id_menu
+    ), 0)
+    WHERE id_menu = NEW.id_menu;
+
+    -- Ancien menu (si id_menu change)
+    UPDATE MENU
+    SET prix_base = COALESCE((
+        SELECT SUM(a.prix_unitaire * ma.quantite)
+        FROM   MENU_ARTICLE ma
+        JOIN   ARTICLE a USING(id_article)
+        WHERE  ma.id_menu = OLD.id_menu
+    ), 0)
+    WHERE id_menu = OLD.id_menu;
+END;
+
+/* Recalcule après DELETE */
+CREATE TRIGGER maj_prix_menu_delete
+AFTER DELETE ON MENU_ARTICLE
+BEGIN
+    UPDATE MENU
+    SET prix_base = COALESCE((
+        SELECT SUM(a.prix_unitaire * ma.quantite)
+        FROM   MENU_ARTICLE ma
+        JOIN   ARTICLE a USING(id_article)
+        WHERE  ma.id_menu = OLD.id_menu
+    ), 0)
+    WHERE id_menu = OLD.id_menu;
 END;
 
 /* ---------- 4. DONNÉES DE TEST ----------------------------- */
@@ -136,3 +180,4 @@ INSERT INTO COMMANDE_MENU VALUES
   (2,2);  -- commande 2 = menu 2
 
 /* ---------- FIN DU SCRIPT ---------------------------------- */
+
