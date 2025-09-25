@@ -1,0 +1,2 @@
+*.json linguist-language=JSON linguist-detectable=true
+*.sql  linguist-language=SQL  linguist-detectable=true
